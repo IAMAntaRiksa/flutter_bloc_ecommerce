@@ -1,6 +1,10 @@
+import 'dart:async';
+
+import 'package:dio/dio.dart';
 import 'package:flutter_app_ecommerce/core/data/api.dart';
 import 'package:flutter_app_ecommerce/core/data/base_api.dart';
 import 'package:flutter_app_ecommerce/core/services/auth/auth_service.dart';
+import 'package:flutter_app_ecommerce/core/services/order/order_service.dart';
 import 'package:flutter_app_ecommerce/core/services/product/product_service.dart';
 import 'package:flutter_app_ecommerce/core/utils/token/token_utils.dart';
 import 'package:get_it/get_it.dart';
@@ -13,4 +17,5 @@ void setupLocator() {
   locator.registerLazySingleton(() => ProductService(locator<BaseAPI>()));
   locator.registerSingleton(TokenUtils());
   locator.registerLazySingleton(() => AuthServices(locator<BaseAPI>()));
+  locator.registerLazySingleton(() => OrderService(locator<BaseAPI>()));
 }

@@ -6,6 +6,7 @@ import 'package:flutter_app_ecommerce/core/data/api.dart';
 import 'package:flutter_app_ecommerce/core/data/base_api_impl.dart';
 import 'package:flutter_app_ecommerce/core/data/dio_logger.dart';
 import 'package:flutter_app_ecommerce/core/models/api/api_response.dart';
+import 'package:flutter_app_ecommerce/core/utils/token/token_utils.dart';
 import 'package:flutter_app_ecommerce/injector.dart';
 
 class BaseAPI implements BaseAPIImpl {
@@ -77,8 +78,9 @@ class BaseAPI implements BaseAPIImpl {
     var header = <String, dynamic>{};
     header['Accept'] = 'application/json';
     header['Content-Type'] = 'application/json';
+
     if (useToken == true) {
-      header['Authorization'] = 'Bearer <token>';
+      header['Authorization'] = 'Bearer <Token>';
     }
     return Options(
       headers: header,

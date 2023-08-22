@@ -20,6 +20,13 @@ class TokenUtils {
     return authData.jwt;
   }
 
+  Future<int> getUserId() async {
+    final shared = SharedManagerUtils<String>();
+    final authJson = await shared.read(_token) ?? "";
+    final authData = AuthResponseModel.fromJson(jsonDecode(authJson));
+    return authData.user!.id;
+  }
+
   Future<bool> isLogin() async {
     final shared = SharedManagerUtils<String>();
     final tokens = await shared.read(_token) ?? "";

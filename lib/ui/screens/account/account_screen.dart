@@ -1,73 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_ecommerce/core/utils/token/token_utils.dart';
 import 'package:flutter_app_ecommerce/core/viewmodels/checkout/checkout_bloc.dart';
-import 'package:flutter_app_ecommerce/core/viewmodels/products/products_bloc.dart';
-import 'package:flutter_app_ecommerce/gen/assets.gen.dart';
 import 'package:flutter_app_ecommerce/ui/constant/constant.dart';
-import 'package:flutter_app_ecommerce/ui/screens/account/account_screen.dart';
+import 'package:flutter_app_ecommerce/ui/screens/auth/auth_screen.dart';
 import 'package:flutter_app_ecommerce/ui/screens/cart/cart_screen.dart';
-import 'package:flutter_app_ecommerce/ui/widgets/Product/product_list.dart';
-import 'package:flutter_app_ecommerce/ui/widgets/carousel/carousel.dart';
-import 'package:flutter_app_ecommerce/ui/widgets/chip/chip_item.dart';
-import 'package:flutter_app_ecommerce/ui/widgets/idle/idle_item.dart';
-import 'package:flutter_app_ecommerce/ui/widgets/idle/loading/loading_listview.dart';
-import 'package:flutter_app_ecommerce/ui/widgets/search/search_item.dart';
+import 'package:flutter_app_ecommerce/ui/screens/home/home_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:go_router/go_router.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-  static const routeName = "/home";
+class AccountScreen extends StatelessWidget {
+  static const routeName = '/account';
+  const AccountScreen({super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  var searchController = TextEditingController();
-
-  int _page = 0;
-  double bottomBarWidth = 42;
-  double bottomBarBorderWidth = 5;
   @override
   Widget build(BuildContext context) {
+    int _page = 1;
+    double bottomBarWidth = 42;
+    double bottomBarBorderWidth = 5;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         elevation: 0,
-        title: _searchWidget(),
+        title: Text(
+          "Account",
+          style: styleTitle.copyWith(
+              color: Colors.white, fontSize: setFontSize(70)),
+        ),
         flexibleSpace: Container(
           decoration: const BoxDecoration(color: Color(0xffEE4D2D)),
         ),
+        actions: [
+          IconButton(
+              onPressed: () async {
+                await setToken.removeToken();
+                // ignore: use_build_context_synchronously
+                context.go(AuthScreen.routeName);
+              },
+              icon: const Icon(Icons.logout)),
+        ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: listCategory
-                    .asMap()
-                    .map(
-                      (index, value) => MapEntry(
-                        index,
-                        ChipItem(
-                          name: value,
-                          onClick: () {},
-                          isFirst: index == 0,
-                        ),
-                      ),
-                    )
-                    .values
-                    .toList(),
-              ),
-            ),
-            const CarouselWidgetList(),
-            const HomeScreenBody(),
-          ],
-        ),
-      ),
+      body: Container(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0,
         selectedItemColor: const Color(0xFFEE4D2D),
@@ -88,8 +61,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              child: const Icon(
-                Icons.home_outlined,
+              child: InkWell(
+                onTap: () => context.push(HomeScreen.routeName),
+                child: const Icon(
+                  Icons.home_outlined,
+                ),
               ),
             ),
             label: '',
@@ -156,55 +132,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _searchWidget() {
-    return SearchItem(
-      controller: searchController,
-      autoFocus: false,
-      hintText: "Mau cari apa?",
-      color: Colors.white,
-    );
-  }
-}
-
-class HomeScreenBody extends StatefulWidget {
-  const HomeScreenBody({super.key});
-
-  @override
-  State<HomeScreenBody> createState() => _HomeScreenBodyState();
-}
-
-class _HomeScreenBodyState extends State<HomeScreenBody> {
-  @override
-  void initState() {
-    context.read<ProductsBloc>().add(const ProductsEvent.getProducts());
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ProductsBloc, ProductsState>(
-      builder: (context, state) {
-        return state.maybeWhen(
-          orElse: () => const LoadingListView(),
-          error: (data) {
-            return Text('Register Error $data');
-          },
-          loaded: (data) {
-            return ProductsListWidget(
-              products: data,
-            );
-          },
-          empty: () {
-            return IdleNoItemCenter(
-              title: "Restaurant not found",
-              iconPathSVG: Assets.images.illustrationNotfound.path,
-            );
-          },
-        );
-      },
     );
   }
 }

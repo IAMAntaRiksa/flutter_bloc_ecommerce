@@ -1,24 +1,28 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-class OrderModel {
+import 'package:flutter_app_ecommerce/core/models/api/api_result_model.dart';
+
+class OrderModel extends Serializable {
   final String? token;
   final String? url;
+
   OrderModel({
     this.token,
     this.url,
   });
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'token': token,
-      'url': url,
-    };
+  factory OrderModel.fromJson(Map<String, dynamic> json) {
+    return OrderModel(
+      token: json['token'] ?? "",
+      url: json['redirect_url'] ?? "",
+    );
   }
 
-  factory OrderModel.fromJson(Map<String, dynamic> map) {
-    return OrderModel(
-      token: map['token'] ?? "",
-      url: map['redirect_url'] ?? "",
-    );
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'token': token,
+      'redirect_url': url,
+    };
   }
 }

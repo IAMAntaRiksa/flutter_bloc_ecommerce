@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_ecommerce/core/viewmodels/checkout/checkout_bloc.dart';
 import 'package:flutter_app_ecommerce/gen/assets.gen.dart';
 import 'package:flutter_app_ecommerce/ui/constant/constant.dart';
+import 'package:flutter_app_ecommerce/ui/screens/account/account_screen.dart';
 import 'package:flutter_app_ecommerce/ui/screens/checkout/checkout_screen.dart';
 import 'package:flutter_app_ecommerce/ui/screens/home/home_screen.dart';
 import 'package:flutter_app_ecommerce/ui/widgets/idle/idle_item.dart';
@@ -265,7 +266,7 @@ class CartScreen extends StatelessWidget {
                 ),
               ),
               child: InkWell(
-                onTap: () {},
+                onTap: () => context.push(AccountScreen.routeName),
                 child: const Icon(
                   Icons.person_outline_outlined,
                 ),

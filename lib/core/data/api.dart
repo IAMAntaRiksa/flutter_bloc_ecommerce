@@ -5,4 +5,5 @@ class Api {
   String getProduct = "$_baseServer/restaurants";
   String authLogin = "$_baseServer/auth/local";
   String authRegiser = "$_baseServer/auth/local/register";
+  String diOrders = "$_baseServer/orders";
 }

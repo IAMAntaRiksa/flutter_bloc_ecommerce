@@ -11,7 +11,6 @@ class QCustomeTextField extends StatelessWidget {
   final bool obscure;
   final bool enabled;
   final int? maxLength;
-  final int maxLines;
   final IconData? prefixIcon;
   final IconData? suffixIcon;
   final Function(String) onChanged;
@@ -30,7 +29,6 @@ class QCustomeTextField extends StatelessWidget {
     this.onSubmitted,
     this.obscure = false,
     this.enabled = true,
-    this.maxLines = 4,
     this.prefixIcon,
     this.suffixIcon,
   }) : super(key: key);
@@ -47,7 +45,6 @@ class QCustomeTextField extends StatelessWidget {
         validator: validator,
         maxLength: maxLength,
         obscureText: obscure,
-        maxLines: maxLines,
         decoration: InputDecoration(
           labelText: label,
           prefix: prefixIcon != null ? Icon(prefixIcon) : null,

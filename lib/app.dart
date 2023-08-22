@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_ecommerce/core/viewmodels/checkout/checkout_bloc.dart';
 import 'package:flutter_app_ecommerce/core/viewmodels/login/login_bloc.dart';
+import 'package:flutter_app_ecommerce/core/viewmodels/order/order_bloc.dart';
 import 'package:flutter_app_ecommerce/core/viewmodels/products/products_bloc.dart';
 import 'package:flutter_app_ecommerce/core/viewmodels/register/register_bloc.dart';
 import 'package:flutter_app_ecommerce/ui/constant/constant.dart';
@@ -25,6 +26,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => RegisterBloc(),
+        ),
+        BlocProvider(
+          create: (context) => OrderBloc(),
         )
       ],
       child: MaterialApp.router(

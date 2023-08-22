@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:flutter_app_ecommerce/core/models/api/api_result_model.dart';
 import 'package:flutter_app_ecommerce/core/models/order/order_item_detail.dart';
 
@@ -8,6 +10,12 @@ class OrderRequestModel extends Serializable {
   OrderRequestModel({
     required this.data,
   });
+
+  factory OrderRequestModel.fromJson(Map<String, dynamic> json) {
+    return OrderRequestModel(
+      data: Data.fromJson(json['data']),
+    );
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -36,6 +44,10 @@ class Data extends Serializable {
 
   factory Data.fromJson(Map<String, dynamic> json) {
     return Data(
+      items: json['items'] != null
+          ? List<OrderItemDetail>.from(
+              json['items'].map((x) => OrderItemDetail.fromJson(x)))
+          : [],
       price: json['totalPrice'],
       address: json['deliveryAddress'],
       courier: json['courierName'],
@@ -47,11 +59,30 @@ class Data extends Serializable {
   @override
   Map<String, dynamic> toJson() {
     return {
+      'items': items?.map((x) => x.toJson()).toList(),
       'totalPrice': price,
       'deliveryAddress': address,
       'courierName': courier,
       'shippingCost': cost,
       'statusOrder': statusOrder,
     };
+  }
+
+  Data copyWith({
+    List<OrderItemDetail>? items,
+    int? price,
+    String? address,
+    String? courier,
+    int? cost,
+    String? statusOrder,
+  }) {
+    return Data(
+      items: items ?? this.items,
+      price: price ?? this.price,
+      address: address ?? this.address,
+      courier: courier ?? this.courier,
+      cost: cost ?? this.cost,
+      statusOrder: statusOrder ?? this.statusOrder,
+    );
   }
 }

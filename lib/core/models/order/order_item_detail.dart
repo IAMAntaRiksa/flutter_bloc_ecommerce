@@ -4,7 +4,7 @@ import 'package:flutter_app_ecommerce/core/models/api/api_result_model.dart';
 class OrderItemDetail extends Serializable {
   final int id;
   final String productName;
-  final String price;
+  final int price;
   final int qty;
 
   OrderItemDetail({

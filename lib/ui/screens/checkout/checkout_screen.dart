@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_ecommerce/core/models/order/order_item_detail.dart';
+import 'package:flutter_app_ecommerce/core/models/order/order_request_model.dart';
+import 'package:flutter_app_ecommerce/core/models/product/product_model.dart';
 import 'package:flutter_app_ecommerce/core/viewmodels/checkout/checkout_bloc.dart';
+import 'package:flutter_app_ecommerce/core/viewmodels/order/order_bloc.dart';
 import 'package:flutter_app_ecommerce/ui/constant/constant.dart';
+import 'package:flutter_app_ecommerce/ui/widgets/snap_widget/snap_widget.dart';
 import 'package:flutter_app_ecommerce/ui/widgets/textfield/custome_textfield.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,30 +15,88 @@ class CheckOutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var addressController = TextEditingController();
+
+    void sendOrders(List<ProductModel> model) {
+      final count =
+          model.fold<int>(0, (sum, items) => sum + items.attributes!.price);
+      final reuestModel = OrderRequestModel(
+          data: Data(
+        items: model
+            .map(
+              (e) => OrderItemDetail(
+                id: e.id,
+                productName: e.attributes!.name,
+                price: e.attributes!.price,
+                qty: 1,
+              ),
+            )
+            .toList(),
+        price: count,
+        address: addressController.text,
+        courier: "JNE",
+        cost: 22000,
+        statusOrder: "waitingPayment",
+      ));
+
+      context.read<OrderBloc>().add(OrderEvent.getOrder(reuestModel));
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("CheckOut"),
+        elevation: 0,
+        title: Text(
+          "CheckOut",
+          style: styleTitle.copyWith(
+              color: Colors.white, fontSize: setFontSize(70)),
+        ),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(color: Color(0xffEE4D2D)),
+        ),
       ),
-      body: const CheckOutBodyScreen(),
+      body: CheckOutBodyScreen(controllerAddress: addressController),
       persistentFooterButtons: [
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  debugPrint("Bayar");
+              child: BlocListener<OrderBloc, OrderState>(
+                listener: (context, state) {
+                  state.maybeWhen(
+                    orElse: () {},
+                    loaded: (model) {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return SnapWebViewScreen(
+                            url: model.url!,
+                          );
+                        },
+                      ));
+                    },
+                  );
                 },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 50),
-                  backgroundColor: const Color(0xffEE4D2D),
-                ),
-                child: const Text(
-                  'Bayar',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
+                child: BlocBuilder<CheckoutBloc, CheckoutState>(
+                  builder: (context, state) {
+                    return state.maybeWhen(
+                      orElse: () => const SizedBox(),
+                      loaded: (model) {
+                        return ElevatedButton(
+                          onPressed: () => sendOrders(model),
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(double.infinity, 50),
+                            backgroundColor: const Color(0xffEE4D2D),
+                          ),
+                          child: const Text(
+                            'Bayar',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
               ),
             ),
@@ -45,24 +108,25 @@ class CheckOutScreen extends StatelessWidget {
 }
 
 class CheckOutBodyScreen extends StatefulWidget {
-  const CheckOutBodyScreen({super.key});
+  final TextEditingController controllerAddress;
+  const CheckOutBodyScreen({required this.controllerAddress, super.key});
 
   @override
   State<CheckOutBodyScreen> createState() => _CheckOutBodyScreenState();
 }
 
 class _CheckOutBodyScreenState extends State<CheckOutBodyScreen> {
-  var controllerAddress = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: setWidth(30)),
+      padding: EdgeInsets.symmetric(
+          vertical: setHeight(30), horizontal: setWidth(30)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           QCustomeTextField(
-            maxLength: 5,
-            controller: controllerAddress,
+            maxLength: 100,
+            controller: widget.controllerAddress,
             label: "Address",
             onChanged: (p0) {},
           ),
@@ -88,7 +152,7 @@ class _CheckOutBodyScreenState extends State<CheckOutBodyScreen> {
                               backgroundImage:
                                   NetworkImage(product.attributes!.image)),
                           title: Text(
-                            product.attributes!.name!,
+                            product.attributes!.name,
                             style: const TextStyle(fontSize: 12),
                           ),
                           trailing: Text('$count'),
