@@ -1,16 +1,4 @@
-# flutter_app_ecommerce
+# flutter with flutter_bloc
+# Ecommerce App
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<img src="https://github.com/IAMAntaRiksa/flutter_bloc_ecommerce/assets/32923555/5f50486b-8dcd-4516-9d60-77cc95b4d4ba" alt="mvvm_flutter_with_flutter-bloc"> 
